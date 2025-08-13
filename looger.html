@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Badminton Match Logger</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    input, button {
+      padding: 5px;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>🏸 Badminton Match Logger</h2>
+
+  <form id="matchForm">
+    <label>Date:</label><br>
+    <input type="date" id="date" required><br>
+    
+    <label>Team 1 vs Team 2:</label><br>
+    <input type="text" id="teams" placeholder="Team A vs Team B" required><br>
+    
+    <label>Result:</label><br>
+    <input type="text" id="result" placeholder="e.g., 21-18, 19-21, 21-17" required><br>
+    
+    <button type="submit">Add Match</button>
+  </form>
+
+  <h3>Match History</h3>
+  <table id="matchTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Teams</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('matchForm');
+    const tableBody = document.querySelector('#matchTable tbody');
+    let matches = JSON.parse(localStorage.getItem('matches')) || [];
+
+    function renderTable() {
+      tableBody.innerHTML = '';
+      matches.forEach(match => {
+        const row = `<tr>
+          <td>${match.date}</td>
+          <td>${match.teams}</td>
+          <td>${match.result}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const date = document.getElementById('date').value;
+      const teams = document.getElementById('teams').value;
+      const result = document.getElementById('result').value;
+      
+      matches.push({ date, teams, result });
+      localStorage.setItem('matches', JSON.stringify(matches));
+      renderTable();
+      form.reset();
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>
